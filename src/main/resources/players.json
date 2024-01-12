@@ -1,0 +1,17 @@
+{
+  "qwe:dg" : {
+    "playerName" : "qwe",
+    "faction" : "dg",
+    "rating" : 1000
+  },
+  "ываыв:йцу" : {
+    "playerName" : "ываыв",
+    "faction" : "йцу",
+    "rating" : 1000
+  },
+  "wer:as" : {
+    "playerName" : "wer",
+    "faction" : "as",
+    "rating" : 1000
+  }
+}
