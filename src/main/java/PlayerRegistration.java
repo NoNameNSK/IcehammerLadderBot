@@ -35,84 +35,48 @@ public class PlayerRegistration {
     /**
      * Обновить рейтинги игроков согласно результатам матча.
      *
-     * @param matchResults Результаты матча в виде "Игрок1:Фракция1 победа/поражение Игрок2:Фракция2".
+     * @param matchResultsString Результаты матча в виде "Игрок1:Фракция1 победа/поражение Игрок2:Фракция2".
+     * @return
      */
-    public void updateRatings(String matchResults) {
-        String[] playerResults = matchResults.split(";");
-        for (String result : playerResults) {
-            String[] results = result.split(" ");
-            String[] parts = results[0].split(":");
-            String playerName = parts[0];
-            String faction = parts[1];
-            double matchResult = Double.parseDouble(results[1]);  // 1.0 для победы, 0.0 для поражения
+    public static String updateRatings(String matchResultsString) {
+        String[] matchResultArray = matchResultsString.split(";");
 
-            String playerKey = playerName + ":" + faction;
-            PlayerData player = playerDatabase.get(playerKey);
+        double matchResult = 0;
+        double matchResultInvert = 0;
+        switch (matchResultArray[1]) {
+            case "Победа" -> {
+                matchResult = 1.0;
+                matchResultInvert = 0.0;
+            }
+            case "Ничья" -> {
+                matchResult = 0.5;
+                matchResultInvert = 0.5;
+            }
+            case "Поражение" -> {
+                matchResult = 0.0;
+                matchResultInvert = 1.0;
+            }
+            default -> {
 
-            if (player != null) {
-                int opponentRating = getOpponentRating(playerResults, playerName, faction);
-                int newRating = calculateEloRating(player.getRating(), opponentRating, matchResult);
-                player.setRating(newRating);
             }
         }
 
-        savePlayerData();  // Сохраняем обновленные рейтинги в файл
-    }
+        PlayerData player1 = playerDatabase.get(matchResultArray[0]);
+        PlayerData player2 = playerDatabase.get(matchResultArray[2]);
 
-    /**
-     * Рассчитать новый рейтинг по системе Эло.
-     *
-     * @param playerRating  Рейтинг игрока перед матчем.
-     * @param opponentRating Рейтинг соперника перед матчем.
-     * @param result        Результат матча (1.0 - победа, 0.0 - поражение).
-     * @return Новый рейтинг игрока после матча.
-     */
-    private int calculateEloRating(int playerRating, int opponentRating, double result) {
-        double expectedScore = calculateExpectedScore(playerRating, opponentRating);
-        int kFactor = 32;
+        if (player1 != null) {
+            if (player2 != null) {
 
-        // Расчет изменения рейтинга
-        int ratingChange = (int) Math.round(kFactor * (result - expectedScore));
+                player1.setRating(
+                        EloRatingCalculator.calculateEloRating(player1.getRating(), player2.getRating(), matchResult));
+                player2.setRating(
+                        EloRatingCalculator.calculateEloRating(player2.getRating(), player1.getRating(), matchResultInvert));
 
-        // Новый рейтинг игрока
-        return playerRating + ratingChange;
-    }
+                savePlayerData();  // Сохраняем обновленные рейтинги в файл
+            } else return "Профиль оппонента не найден в базе";
+        } else return "Ваш профиль не найден в базе";
 
-    /**
-     * Рассчитать ожидаемый результат в матче по системе Эло.
-     *
-     * @param playerRating  Рейтинг игрока перед матчем.
-     * @param opponentRating Рейтинг соперника перед матчем.
-     * @return Ожидаемый результат в диапазоне от 0 до 1.
-     */
-    private double calculateExpectedScore(int playerRating, int opponentRating) {
-        return 1.0 / (1.0 + Math.pow(10, (opponentRating - playerRating) / 400.0));
-    }
-
-    /**
-     * Получить рейтинг соперника.
-     *
-     * @param playerResults Результаты матча.
-     * @param playerName    Имя текущего игрока.
-     * @param faction       Фракция текущего игрока.
-     * @return Рейтинг соперника.
-     */
-    private int getOpponentRating(String[] playerResults, String playerName, String faction) {
-        for (String result : playerResults) {
-            String[] parts = result.split(":");
-            String opponentName = parts[0];
-            String opponentFaction = parts[1];
-            double matchResult = Double.parseDouble(parts[2]);
-
-            if (!opponentName.equals(playerName) || !opponentFaction.equals(faction)) {
-                String opponentKey = opponentName + ":" + opponentFaction;
-                PlayerData opponent = playerDatabase.get(opponentKey);
-                if (opponent != null) {
-                    return opponent.getRating();
-                }
-            }
-        }
-        return 1000; // Возвращаем значение по умолчанию, если не удалось найти рейтинг соперника
+        return "Результат сохранен";
     }
 
     /**
@@ -161,13 +125,5 @@ public class PlayerRegistration {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        PlayerRegistration playerRegistration = new PlayerRegistration();
-
-        // Пример обновления рейтингов после матча и вывода обновленной информации
-        playerRegistration.updateRatings("Игрок1:Фракция1 1.0;Игрок2:Фракция3 0.0");
-        playerRegistration.displayAllPlayers();
     }
 }
