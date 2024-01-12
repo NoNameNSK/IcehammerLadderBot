@@ -4,15 +4,20 @@
     "faction" : "dg",
     "rating" : 1000
   },
+  "Йоу:Й" : {
+    "playerName" : "Йоу",
+    "faction" : "Й",
+    "rating" : 1016
+  },
   "asd:a" : {
     "playerName" : "asd",
     "faction" : "a",
-    "rating" : 1005
+    "rating" : 1014
   },
   "qwe:q" : {
     "playerName" : "qwe",
     "faction" : "q",
-    "rating" : 1076
+    "rating" : 971
   },
   "ываыв:йцу" : {
     "playerName" : "ываыв",
@@ -22,6 +27,6 @@
   "wer:as" : {
     "playerName" : "wer",
     "faction" : "as",
-    "rating" : 987
+    "rating" : 1000
   }
 }

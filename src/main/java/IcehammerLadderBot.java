@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class IcehammerLadderBot extends TelegramLongPollingBot {
 
-    private Map<Long, UserContext> userContexts = new HashMap<>();
+    private final Map<Long, UserContext> userContexts = new HashMap<>();
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -21,7 +21,7 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
 
             UserContext context = userContexts.computeIfAbsent(chatId, k -> new UserContext());
-            SendMessage message;
+            SendMessage message = null;
 
             if (messageText.equals("Зарегистрироваться"))
                 context.setCurrentState(RegistrationState.ENTER_NAME);
@@ -31,6 +31,12 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
 
             if (messageText.equals("Внести результаты"))
                 context.setCurrentState(RegistrationState.SENT_RESULT);
+
+            if (messageText.equals("!wipe"))
+                context.setCurrentState(RegistrationState.WIPE);
+
+            if (messageText.equals("!clear"))
+                context.setCurrentState(RegistrationState.CLEAR);
 
             switch (context.getCurrentState()) {
                 case START -> {
@@ -94,7 +100,28 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
                     context.setPlayer2(messageText);
                     message = new SendMessage();
                     message.setChatId(chatId);
-                    message.setText(PlayerRegistration.updateRatings(matchResult(context)));
+                    message.setText(
+                            PlayerRegistration.updateRatings(
+                                    context.getPlayer1(),
+                                    context.getPlayer2(),
+                                    context.getMatchResult()
+                            ));
+                    context.setCurrentState(RegistrationState.START);
+                    sendKeyboard(message);
+                }
+                case WIPE -> {
+                    message = new SendMessage();
+                    message.setChatId(chatId);
+                    message.setText("Рейтинг сброшен");
+                    PlayerRegistration.wipe();
+                    context.setCurrentState(RegistrationState.START);
+                    sendKeyboard(message);
+                }
+                case CLEAR -> {
+                    message = new SendMessage();
+                    message.setChatId(chatId);
+                    message.setText("Все участники удалены");
+                    PlayerRegistration.clearAllPlayers();
                     context.setCurrentState(RegistrationState.START);
                     sendKeyboard(message);
                 }
@@ -112,10 +139,6 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
                 e.printStackTrace();
             }
         }
-    }
-
-    private String matchResult(UserContext context) {
-        return context.getPlayer1() + ";" + context.getMatchResult() + ";" + context.getPlayer2();
     }
 
     private void sendKeyboard(SendMessage message) {
@@ -164,10 +187,10 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
     }
 
     private enum RegistrationState {
-        START, // начальное состояние
-        ENTER_NAME, // ввод имени
-        ENTER_FACTION, // ввод фракции
-        SHOW_LADDER, SENT_RESULT, SENT_RESULT_PLAYER1, SENT_RESULT_MATCHRESULT, SENT_RESULT_PLAYER2, END_REGISTRATION
+        START,
+        ENTER_NAME,
+        ENTER_FACTION,
+        SHOW_LADDER, SENT_RESULT, SENT_RESULT_PLAYER1, SENT_RESULT_MATCHRESULT, SENT_RESULT_PLAYER2, WIPE, CLEAR, END_REGISTRATION
     }
 
     private static class UserContext {
@@ -175,7 +198,7 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
         private String playerName;
         private String faction;
         private String player1;
-        private String matchResult;
+        private MatchResult matchResult;
         private String player2;
 
         public UserContext() {
@@ -214,12 +237,16 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
             this.player1 = player1;
         }
 
-        public String getMatchResult() {
+        public MatchResult getMatchResult() {
             return matchResult;
         }
 
         public void setMatchResult(String matchResult) {
-            this.matchResult = matchResult;
+            switch (matchResult) {
+                case "Победа" -> this.matchResult = MatchResult.WIN;
+                case "Ничья" -> this.matchResult = MatchResult.DRAW;
+                case "Поражение" -> this.matchResult = MatchResult.LOSE;
+            }
         }
 
         public String getPlayer2() {

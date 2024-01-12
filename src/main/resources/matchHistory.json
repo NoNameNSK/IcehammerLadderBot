@@ -1,0 +1,23 @@
+[ {
+  "player1Name" : "qwe",
+  "faction1" : "q",
+  "rating1Before" : 985,
+  "rating1After" : 986,
+  "result" : 0.5,
+  "player2Name" : "asd",
+  "faction2" : "a",
+  "rating2Before" : 1000,
+  "rating2After" : 999,
+  "matchResultInvert" : 0.5
+}, {
+  "player1Name" : "qwe",
+  "faction1" : "q",
+  "rating1Before" : 986,
+  "rating1After" : 971,
+  "result" : 0.0,
+  "player2Name" : "asd",
+  "faction2" : "a",
+  "rating2Before" : 999,
+  "rating2After" : 1014,
+  "matchResultInvert" : 1.0
+} ]
