@@ -2,20 +2,19 @@ public class PlayerData {
 
     private String playerName;
     private String faction;
-    private int rating;  // добавим рейтинг
+    private int rating;
 
-    // Конструктор по умолчанию для Jackson
+    private static final int DEFAULT_PLAYER_RATING = 1550;
+
     public PlayerData() {
     }
 
-    // Конструктор для создания нового игрока
     public PlayerData(String playerName, String faction) {
         this.playerName = playerName;
         this.faction = faction;
-        this.rating = 1000;  // начальное значение рейтинга (вы можете установить любое значение)
+        this.rating = DEFAULT_PLAYER_RATING;
     }
 
-    // Геттеры и сеттеры для всех полей
     public String getPlayerName() {
         return playerName;
     }

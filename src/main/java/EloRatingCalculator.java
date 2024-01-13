@@ -1,8 +1,8 @@
 public class EloRatingCalculator {
 
     // Константы, которые могут быть настроены в соответствии с требованиями
-    private static final int DEFAULT_INITIAL_RATING = 1000;
-    private static final int DEFAULT_K_FACTOR = 32;
+    private static final int DEFAULT_INITIAL_RATING = 1550;
+    private static final int DEFAULT_K_FACTOR = 15;
 
     /**
      * Рассчитать новый рейтинг по системе Эло.

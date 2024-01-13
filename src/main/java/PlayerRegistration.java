@@ -12,34 +12,26 @@ public class PlayerRegistration {
     private static final String MATCH_HISTORY_FILE_PATH = "src/main/resources/matchHistory.json";
     private static final  Map<String, PlayerData> playerDatabase = loadPlayerData();
     private static final List<MatchHistoryEntry> matchHistory = loadMatchHistory();
+    private static final int DEFAULT_PLAYER_RATING = 1550;
 
-    /**
-     * Регистрация нового игрока.
-     *
-     * @param playerName Имя игрока.
-     * @param faction    Фракция игрока.
-     */
     public static String registerPlayer(String playerName, String faction) {
         String playerKey = playerName + ":" + faction;
 
         if (!playerDatabase.containsKey(playerKey)) {
+
+            if(playerName.length() > 20 || faction.length() > 20)
+                return "Слишком длинное имя или название фракции";
+
             PlayerData newPlayer = new PlayerData(playerName, faction);
             playerDatabase.put(playerKey, newPlayer);
             savePlayerData();
+
             return "Игрок " + playerName + " с фракцией " + faction + " успешно зарегистрирован.";
         } else {
             return "Игрок " + playerName + " с фракцией " + faction + " уже зарегистрирован.";
         }
     }
 
-    /**
-     * Обновить рейтинги игроков согласно результатам матча.
-     *
-     * @param player1Name Имя и фракция первого игрока
-     * @param player2Name Имя и фракция второго игрока
-     * @param result      результат матча
-     * @return
-     */
     public static String updateRatings(String player1Name, String player2Name, MatchResult result) {
 
         double matchResult = 0;
@@ -97,9 +89,6 @@ public class PlayerRegistration {
         return "Результат сохранен";
     }
 
-    /**
-     * Вывести информацию о всех игроках, отсортированных по рейтингу и имени.
-     */
     public static String displayAllPlayers() {
         return playerDatabase.values().stream()
                 .sorted(Comparator.comparing(PlayerData::getRating).reversed()
@@ -110,11 +99,6 @@ public class PlayerRegistration {
                 .collect(Collectors.joining("\n"));
     }
 
-    /**
-     * Загрузка данных об игроках из файла JSON.
-     *
-     * @return Карта данных об игроках.
-     */
     private static Map<String, PlayerData> loadPlayerData() {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, PlayerData> loadedData = new HashMap<>();
@@ -131,9 +115,6 @@ public class PlayerRegistration {
         return loadedData;
     }
 
-    /**
-     * Сохранение данных об игроках в файл JSON.
-     */
     private static void savePlayerData() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -146,12 +127,17 @@ public class PlayerRegistration {
     }
 
     public static void wipe() {
-        playerDatabase.values().forEach(player -> player.setRating(1000));
+        playerDatabase.values().forEach(player -> player.setRating(DEFAULT_PLAYER_RATING));
         savePlayerData();
     }
 
     public static void clearAllPlayers() {
         playerDatabase.clear();
+        savePlayerData();
+    }
+
+    public static void deletePlayer(String nameFaction) {
+        playerDatabase.remove(nameFaction);
         savePlayerData();
     }
 
@@ -187,4 +173,23 @@ public class PlayerRegistration {
     private record MatchHistoryEntry(String player1Name, String faction1, int rating1Before, int rating1After,
                                      double result, String player2Name, String faction2, int rating2Before,
                                      int rating2After, double matchResultInvert) {}
+
+    public static String showMatchHistory() {
+        int startIndex = Math.max(0, matchHistory.size() - 10);
+        List<MatchHistoryEntry> last10Matches = matchHistory.subList(startIndex, matchHistory.size());
+
+        StringBuilder result = new StringBuilder();
+
+        for (MatchHistoryEntry entry : last10Matches) {
+            result.append(formatMatchEntry(entry));
+        }
+
+        return result.toString();
+    }
+
+    private static String formatMatchEntry(MatchHistoryEntry entry) {
+        return String.format("%s:%s, Рейтинг до: %d, Рейтинг после: %d, Результат: %.1f\n%s:%s, Рейтинг до: %d, Рейтинг после: %d, Результат: %.1f\n\n",
+                entry.player1Name(), entry.faction1(), entry.rating1Before(), entry.rating1After(), entry.result(),
+                entry.player2Name(), entry.faction2(), entry.rating2Before(), entry.rating2After(), entry.matchResultInvert());
+    }
 }

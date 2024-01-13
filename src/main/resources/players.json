@@ -1,32 +1,67 @@
 {
-  "qwe:dg" : {
-    "playerName" : "qwe",
-    "faction" : "dg",
-    "rating" : 1000
+  "Asuko:Custodes" : {
+    "playerName" : "Asuko",
+    "faction" : "Custodes",
+    "rating" : 1550
   },
-  "Йоу:Й" : {
-    "playerName" : "Йоу",
-    "faction" : "Й",
-    "rating" : 1016
+  "Влодик:ПМ" : {
+    "playerName" : "Влодик",
+    "faction" : "ПМ",
+    "rating" : 1550
   },
-  "asd:a" : {
-    "playerName" : "asd",
-    "faction" : "a",
-    "rating" : 1014
+  "фыв:CHAOS KNIGHTS" : {
+    "playerName" : "фыв",
+    "faction" : "CHAOS KNIGHTS",
+    "rating" : 1550
   },
-  "qwe:q" : {
-    "playerName" : "qwe",
-    "faction" : "q",
-    "rating" : 971
+  "Goodwin:Necrons" : {
+    "playerName" : "Goodwin",
+    "faction" : "Necrons",
+    "rating" : 1550
   },
-  "ываыв:йцу" : {
-    "playerName" : "ываыв",
-    "faction" : "йцу",
-    "rating" : 1000
+  "Loken:Asuryani" : {
+    "playerName" : "Loken",
+    "faction" : "Asuryani",
+    "rating" : 1550
   },
-  "wer:as" : {
-    "playerName" : "wer",
-    "faction" : "as",
-    "rating" : 1000
+  "Марк:Space Marines" : {
+    "playerName" : "Марк",
+    "faction" : "Space Marines",
+    "rating" : 1550
+  },
+  "Данон:Орки" : {
+    "playerName" : "Данон",
+    "faction" : "Орки",
+    "rating" : 1550
+  },
+  "Назад:BLOOD ANGELS" : {
+    "playerName" : "Назад",
+    "faction" : "BLOOD ANGELS",
+    "rating" : 1550
+  },
+  "Lork:Орки" : {
+    "playerName" : "Lork",
+    "faction" : "Орки",
+    "rating" : 1550
+  },
+  "фыв:SPACE MARINES" : {
+    "playerName" : "фыв",
+    "faction" : "SPACE MARINES",
+    "rating" : 1550
+  },
+  "Покров:Некроны" : {
+    "playerName" : "Покров",
+    "faction" : "Некроны",
+    "rating" : 1550
+  },
+  "фыв:ASTRA MILITARUM" : {
+    "playerName" : "фыв",
+    "faction" : "ASTRA MILITARUM",
+    "rating" : 1550
+  },
+  "фыв:AELDARI" : {
+    "playerName" : "фыв",
+    "faction" : "AELDARI",
+    "rating" : 1550
   }
 }

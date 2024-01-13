@@ -32,11 +32,33 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
             if (messageText.equals("Внести результаты"))
                 context.setCurrentState(RegistrationState.SENT_RESULT);
 
+            if (messageText.equals("Показать историю матчей"))
+                context.setCurrentState(RegistrationState.SHOW_MATCH_HISTORY);
+
             if (messageText.equals("!wipe"))
                 context.setCurrentState(RegistrationState.WIPE);
 
             if (messageText.equals("!clear"))
                 context.setCurrentState(RegistrationState.CLEAR);
+
+            if (messageText.contains("!delete"))
+                context.setCurrentState(RegistrationState.DELETE);
+
+            if (Faction.isValidFaction(messageText))
+                context.setCurrentState(RegistrationState.END_REGISTRATION);
+
+            if (context.getCurrentState().equals(RegistrationState.ENTER_FACTION) &&
+                    messageText.equals("Дальше"))
+                context.setCurrentState(RegistrationState.ENTER_FACTION_1);
+            else if (context.getCurrentState().equals(RegistrationState.ENTER_FACTION_1) &&
+                    messageText.equals("Дальше"))
+                context.setCurrentState(RegistrationState.ENTER_FACTION_2);
+            else if (context.getCurrentState().equals(RegistrationState.ENTER_FACTION_1) &&
+                    messageText.equals("Назад"))
+                context.setCurrentState(RegistrationState.ENTER_FACTION);
+            else if (context.getCurrentState().equals(RegistrationState.ENTER_FACTION_2) &&
+                    messageText.equals("Назад"))
+                context.setCurrentState(RegistrationState.ENTER_FACTION_1);
 
             switch (context.getCurrentState()) {
                 case START -> {
@@ -55,8 +77,14 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
                     context.setPlayerName(messageText);
                     message = new SendMessage();
                     message.setChatId(chatId);
-                    message.setText("Введите фракцию:");
-                    context.setCurrentState(RegistrationState.END_REGISTRATION);
+                    message.setText("Выберите фракцию:");
+                    sendKeyboardFaction(message, context);
+                }
+                case ENTER_FACTION_1, ENTER_FACTION_2 -> {
+                    message = new SendMessage();
+                    message.setChatId(chatId);
+                    message.setText("Выберите фракцию:");
+                    sendKeyboardFaction(message, context);
                 }
                 case END_REGISTRATION -> {
                     context.setFaction(messageText);
@@ -76,7 +104,7 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
                 case SENT_RESULT -> {
                     message = new SendMessage();
                     message.setChatId(chatId);
-                    message.setText("Введите своё имя и фракцию в формате Name:Faction. Как указывали при регистрации.");
+                    message.setText("Введите своё имя, как указывали при регистрации.");
                     context.setCurrentState(RegistrationState.SENT_RESULT_PLAYER1);
                     sendKeyboard(message);
                 }
@@ -125,6 +153,20 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
                     context.setCurrentState(RegistrationState.START);
                     sendKeyboard(message);
                 }
+                case SHOW_MATCH_HISTORY -> {
+                    message = new SendMessage();
+                    message.setChatId(chatId);
+                    message.setText(PlayerRegistration.showMatchHistory());
+                    context.setCurrentState(RegistrationState.START);
+                    sendKeyboard(message);
+                }
+                case DELETE -> {
+                    message = new SendMessage();
+                    message.setChatId(chatId);
+                    PlayerRegistration.deletePlayer(messageText.split(" ")[1]);
+                    context.setCurrentState(RegistrationState.START);
+                    sendKeyboard(message);
+                }
                 default -> {
                     message = new SendMessage();
                     message.setChatId(chatId);
@@ -167,9 +209,112 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
             keyboard.add(row2);
 
             KeyboardRow row3 = new KeyboardRow();
-            registerButton = new KeyboardButton("Зарегистрироваться");
+            registerButton = new KeyboardButton("Показать историю матчей");
             row3.add(registerButton);
             keyboard.add(row3);
+
+            KeyboardRow row4 = new KeyboardRow();
+            registerButton = new KeyboardButton("Зарегистрироваться");
+            row4.add(registerButton);
+            keyboard.add(row4);
+        }
+
+        keyboardMarkup.setKeyboard(keyboard);
+        message.setReplyMarkup(keyboardMarkup);
+    }
+
+    private void sendKeyboardFaction(SendMessage message, UserContext context) {
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setResizeKeyboard(true);
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        if (context.getCurrentState().equals(RegistrationState.ENTER_FACTION)) {
+            KeyboardRow row1 = new KeyboardRow();
+            KeyboardRow row2 = new KeyboardRow();
+            KeyboardRow row3 = new KeyboardRow();
+            KeyboardRow row4 = new KeyboardRow();
+            KeyboardButton button1 = new KeyboardButton(Faction.SPACE_MARINES.getValue());
+            KeyboardButton button3 = new KeyboardButton(Faction.BLACK_TEMPLARS.getValue());
+            KeyboardButton button2 = new KeyboardButton(Faction.BLOOD_ANGELS.getValue());
+            KeyboardButton button4 = new KeyboardButton(Faction.DARK_ANGELS.getValue());
+            KeyboardButton button5 = new KeyboardButton(Faction.DEATHWATCH.getValue());
+            KeyboardButton button6 = new KeyboardButton(Faction.SPACE_WOLVES.getValue());
+            KeyboardButton button7 = new KeyboardButton(Faction.ADEPTA_SORORITAS.getValue());
+            KeyboardButton button8 = new KeyboardButton(Faction.ADEPTUS_CUSTODES.getValue());
+            KeyboardButton button9 = new KeyboardButton(Faction.ADEPTUS_MECHANICUS.getValue());
+            KeyboardButton button10 = new KeyboardButton("Дальше");
+            row1.add(button1);
+            row1.add(button2);
+            row1.add(button3);
+            row2.add(button4);
+            row2.add(button5);
+            row2.add(button6);
+            row3.add(button7);
+            row3.add(button8);
+            row3.add(button9);
+            row4.add(button10);
+            keyboard.add(row1);
+            keyboard.add(row2);
+            keyboard.add(row3);
+            keyboard.add(row4);
+        } else if (context.getCurrentState().equals(RegistrationState.ENTER_FACTION_1)) {
+            KeyboardRow row1 = new KeyboardRow();
+            KeyboardRow row2 = new KeyboardRow();
+            KeyboardRow row3 = new KeyboardRow();
+            KeyboardRow row4 = new KeyboardRow();
+            KeyboardButton button1 = new KeyboardButton(Faction.ASTRA_MILITARUM.getValue());
+            KeyboardButton button3 = new KeyboardButton(Faction.GREY_KNIGHTS.getValue());
+            KeyboardButton button2 = new KeyboardButton(Faction.IMPERIAL_KNIGHTS.getValue());
+            KeyboardButton button4 = new KeyboardButton(Faction.CHAOS_DAEMONS.getValue());
+            KeyboardButton button5 = new KeyboardButton(Faction.CHAOS_KNIGHTS.getValue());
+            KeyboardButton button6 = new KeyboardButton(Faction.CHAOS_SPACE_MARINES.getValue());
+            KeyboardButton button7 = new KeyboardButton(Faction.DEATH_GUARD.getValue());
+            KeyboardButton button8 = new KeyboardButton(Faction.THOUSAND_SONS.getValue());
+            KeyboardButton button9 = new KeyboardButton(Faction.WORLD_EATERS.getValue());
+            KeyboardButton button10 = new KeyboardButton("Назад");
+            KeyboardButton button11 = new KeyboardButton("Дальше");
+            row1.add(button1);
+            row1.add(button2);
+            row1.add(button3);
+            row2.add(button4);
+            row2.add(button5);
+            row2.add(button6);
+            row3.add(button7);
+            row3.add(button8);
+            row3.add(button9);
+            row4.add(button10);
+            row4.add(button11);
+            keyboard.add(row1);
+            keyboard.add(row2);
+            keyboard.add(row3);
+            keyboard.add(row4);
+        } else if (context.getCurrentState().equals(RegistrationState.ENTER_FACTION_2)) {
+            KeyboardRow row1 = new KeyboardRow();
+            KeyboardRow row2 = new KeyboardRow();
+            KeyboardRow row3 = new KeyboardRow();
+            KeyboardRow row4 = new KeyboardRow();
+            KeyboardButton button1 = new KeyboardButton(Faction.AELDARI.getValue());
+            KeyboardButton button3 = new KeyboardButton(Faction.DRUKHARI.getValue());
+            KeyboardButton button2 = new KeyboardButton(Faction.GENESTEALER_CULTS.getValue());
+            KeyboardButton button4 = new KeyboardButton(Faction.LEAGUES_OF_VOTANN.getValue());
+            KeyboardButton button5 = new KeyboardButton(Faction.NECRONS.getValue());
+            KeyboardButton button6 = new KeyboardButton(Faction.ORKS.getValue());
+            KeyboardButton button7 = new KeyboardButton(Faction.TAU_EMPIRE.getValue());
+            KeyboardButton button8 = new KeyboardButton(Faction.TYRANIDS.getValue());
+            KeyboardButton button10 = new KeyboardButton("Назад");
+            row1.add(button1);
+            row1.add(button2);
+            row1.add(button3);
+            row2.add(button4);
+            row2.add(button5);
+            row2.add(button6);
+            row3.add(button7);
+            row3.add(button8);
+            row4.add(button10);
+            keyboard.add(row1);
+            keyboard.add(row2);
+            keyboard.add(row3);
+            keyboard.add(row4);
         }
 
         keyboardMarkup.setKeyboard(keyboard);
@@ -190,7 +335,7 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
         START,
         ENTER_NAME,
         ENTER_FACTION,
-        SHOW_LADDER, SENT_RESULT, SENT_RESULT_PLAYER1, SENT_RESULT_MATCHRESULT, SENT_RESULT_PLAYER2, WIPE, CLEAR, END_REGISTRATION
+        SHOW_LADDER, SENT_RESULT, SENT_RESULT_PLAYER1, SENT_RESULT_MATCHRESULT, SENT_RESULT_PLAYER2, WIPE, CLEAR, SHOW_MATCH_HISTORY, ENTER_FACTION_1, ENTER_FACTION_2, DELETE, END_REGISTRATION
     }
 
     private static class UserContext {
