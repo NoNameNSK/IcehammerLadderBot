@@ -2,7 +2,6 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
@@ -37,6 +36,9 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
 
             if (messageText.equals("Показать историю матчей"))
                 context.setCurrentState(RegistrationState.SHOW_MATCH_HISTORY);
+
+            if (messageText.equals("Объявления"))
+                context.setCurrentState(RegistrationState.ANNOUNCEMENT);
 
             if (messageText.equals("!wipe"))
                 context.setCurrentState(RegistrationState.WIPE);
@@ -205,6 +207,11 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
                     context.setCurrentState(RegistrationState.START);
                     sendKeyboardMainMenu(message);
                 }
+                case ANNOUNCEMENT -> {
+                    message.setText(PlayerRegistration.announcement());
+                    context.setCurrentState(RegistrationState.START);
+                    sendKeyboardMainMenu(message);
+                }
                 default -> {
                     message.setText("Что-то пошло не так. Попробуйте еще раз.");
                     context.setCurrentState(RegistrationState.START);
@@ -240,9 +247,14 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
         keyboard.add(row3);
 
         KeyboardRow row4 = new KeyboardRow();
-        registerButton = new KeyboardButton("Зарегистрироваться");
+        registerButton = new KeyboardButton("Объявления");
         row4.add(registerButton);
         keyboard.add(row4);
+
+        KeyboardRow row5 = new KeyboardRow();
+        registerButton = new KeyboardButton("Зарегистрироваться");
+        row5.add(registerButton);
+        keyboard.add(row5);
 
         keyboardMarkup.setKeyboard(keyboard);
         message.setReplyMarkup(keyboardMarkup);
@@ -470,7 +482,7 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
         START,
         ENTER_NAME,
         ENTER_FACTION,
-        SHOW_LADDER, SENT_RESULT, SENT_RESULT_PLAYER1, SENT_RESULT_MATCHRESULT, SENT_RESULT_PLAYER2, WIPE, CLEAR, SHOW_MATCH_HISTORY, ENTER_FACTION_1, ENTER_FACTION_2, DELETE, SENT_RESULT_PLAYER1_FACTION, SENT_RESULT_PLAYER1_FACTION_1, SENT_RESULT_PLAYER1_FACTION_2, SENT_RESULT_PLAYER2_FACTION, SENT_RESULT_PLAYER2_FACTION_1, SENT_RESULT_PLAYER2_FACTION_2, SENT_RESULT_FINISH, END_REGISTRATION
+        SHOW_LADDER, SENT_RESULT, SENT_RESULT_PLAYER1, SENT_RESULT_MATCHRESULT, SENT_RESULT_PLAYER2, WIPE, CLEAR, SHOW_MATCH_HISTORY, ENTER_FACTION_1, ENTER_FACTION_2, DELETE, SENT_RESULT_PLAYER1_FACTION, SENT_RESULT_PLAYER1_FACTION_1, SENT_RESULT_PLAYER1_FACTION_2, SENT_RESULT_PLAYER2_FACTION, SENT_RESULT_PLAYER2_FACTION_1, SENT_RESULT_PLAYER2_FACTION_2, SENT_RESULT_FINISH, ANNOUNCEMENT, END_REGISTRATION
     }
 
     private static class UserContext {

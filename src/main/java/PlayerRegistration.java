@@ -10,8 +10,11 @@ public class PlayerRegistration {
 
     private static final String DATA_FILE_PATH = "src/main/resources/players.json";
     private static final String MATCH_HISTORY_FILE_PATH = "src/main/resources/matchHistory.json";
+    private static final String ANNOUNCEMENT_FILE_PATH = "src/main/resources/announcement.json";
     private static final  Map<String, PlayerData> playerDatabase = loadPlayerData();
     private static final List<MatchHistoryEntry> matchHistory = loadMatchHistory();
+    private static final List<String> announcement = loadAnnouncement();
+
     private static final int DEFAULT_PLAYER_RATING = 1550;
 
     public static String registerPlayer(String playerName, String faction) {
@@ -90,6 +93,8 @@ public class PlayerRegistration {
     }
 
     public static String displayAllPlayers() {
+        if (playerDatabase.size() == 0)
+            return "Никто не зарегистрирован";
         return playerDatabase.values().stream()
                 .sorted(Comparator.comparing(PlayerData::getRating).reversed()
                         .thenComparing(PlayerData::getPlayerName))
@@ -159,6 +164,24 @@ public class PlayerRegistration {
         return loadedData;
     }
 
+    private static List<String> loadAnnouncement() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<String> loadedData = new ArrayList<>();
+
+        try {
+            File file = new File(ANNOUNCEMENT_FILE_PATH);
+            if (file.exists()) {
+                loadedData = objectMapper.readValue(
+                        file, objectMapper.getTypeFactory()
+                                .constructCollectionType(ArrayList.class, String.class));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return loadedData;
+    }
+
     private static void saveMatchHistory() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -168,6 +191,20 @@ public class PlayerRegistration {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String announcement() {
+        int startIndex = Math.max(0, announcement.size() - 10);
+        List<String> last10 = announcement.subList(startIndex, announcement.size());
+
+        StringBuilder result = new StringBuilder();
+
+        for (String entry : last10) {
+            result.append(entry);
+            result.append("\n");
+        }
+
+        return result.toString();
     }
 
     private record MatchHistoryEntry(String player1Name, String faction1, int rating1Before, int rating1After,
