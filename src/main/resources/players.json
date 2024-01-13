@@ -12,7 +12,7 @@
   "фыв:CHAOS KNIGHTS" : {
     "playerName" : "фыв",
     "faction" : "CHAOS KNIGHTS",
-    "rating" : 1550
+    "rating" : 1549
   },
   "Goodwin:Necrons" : {
     "playerName" : "Goodwin",
@@ -47,6 +47,11 @@
   "фыв:SPACE MARINES" : {
     "playerName" : "фыв",
     "faction" : "SPACE MARINES",
+    "rating" : 1546
+  },
+  "GENERAL_RODYAN:ADEPTA SORORITAS" : {
+    "playerName" : "GENERAL_RODYAN",
+    "faction" : "ADEPTA SORORITAS",
     "rating" : 1550
   },
   "Покров:Некроны" : {
@@ -57,11 +62,11 @@
   "фыв:ASTRA MILITARUM" : {
     "playerName" : "фыв",
     "faction" : "ASTRA MILITARUM",
-    "rating" : 1550
+    "rating" : 1549
   },
   "фыв:AELDARI" : {
     "playerName" : "фыв",
     "faction" : "AELDARI",
-    "rating" : 1550
+    "rating" : 1557
   }
 }
