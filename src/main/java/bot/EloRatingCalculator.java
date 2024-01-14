@@ -1,3 +1,5 @@
+package bot;
+
 public class EloRatingCalculator {
 
     // Константы, которые могут быть настроены в соответствии с требованиями

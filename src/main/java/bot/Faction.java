@@ -1,3 +1,5 @@
+package bot;
+
 public enum Faction {
     SPACE_MARINES("SPACE MARINES"),
     BLACK_TEMPLARS("BLACK TEMPLARS"),

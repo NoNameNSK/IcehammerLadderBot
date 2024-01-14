@@ -1,3 +1,5 @@
+package bot;
+
 public class PlayerData {
 
     private String playerName;

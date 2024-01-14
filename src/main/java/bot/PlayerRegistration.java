@@ -1,3 +1,5 @@
+package bot;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -8,9 +10,13 @@ import java.util.stream.Collectors;
 
 public class PlayerRegistration {
 
-    private static final String DATA_FILE_PATH = "src/main/resources/players.json";
-    private static final String MATCH_HISTORY_FILE_PATH = "src/main/resources/matchHistory.json";
-    private static final String ANNOUNCEMENT_FILE_PATH = "src/main/resources/announcement.json";
+//    private static final String DATA_FILE_PATH = "src/main/resources/players.json";
+//    private static final String MATCH_HISTORY_FILE_PATH = "src/main/resources/matchHistory.json";
+//    private static final String ANNOUNCEMENT_FILE_PATH = "src/main/resources/announcement.json";
+
+    private static final String DATA_FILE_PATH = System.getenv("DATA_FILE_PATH");
+    private static final String MATCH_HISTORY_FILE_PATH = System.getenv("MATCH_HISTORY_FILE_PATH");
+    private static final String ANNOUNCEMENT_FILE_PATH = System.getenv("ANNOUNCEMENT_FILE_PATH");
     private static final  Map<String, PlayerData> playerDatabase = loadPlayerData();
     private static final List<MatchHistoryEntry> matchHistory = loadMatchHistory();
     private static final List<String> announcement = loadAnnouncement();
