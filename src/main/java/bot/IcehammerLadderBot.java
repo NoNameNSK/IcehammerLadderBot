@@ -484,8 +484,7 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-//        return "6964845032:AAE4dvPlxcQgLdMXzRfzEe8fbfdy5e18N2I";//prod
-        return "6661764590:AAHMa_M_c0uGX7UxmyMil54jOWBXxiDLCC0";//test
+        return System.getenv("BOT_TEST_TOKEN");//test
     }
 
     private enum RegistrationState {
