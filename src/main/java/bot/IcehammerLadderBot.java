@@ -14,6 +14,10 @@ import java.util.Map;
 
 public class IcehammerLadderBot extends TelegramLongPollingBot {
 
+//    Баг на создание игрока при смене страниц
+//Баг на внесение результатов с несуществующим именем оппа
+//Фича на форматирования вывода ладдера 
+
     private final Map<Long, UserContext> userContexts = new HashMap<>();
 
     @Override
@@ -127,7 +131,8 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
                     context.setCurrentState(RegistrationState.ENTER_FACTION);
                 }
                 case ENTER_FACTION -> {
-                    context.setPlayerName(messageText);
+                    if (context.getPlayerName() == null || !context.getPlayerName().equals("Назад"))
+                        context.setPlayerName(messageText);
                     message.setText("Выберите фракцию:");
                     sendKeyboardFaction(message, context);
                 }
@@ -151,7 +156,8 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
                     context.setCurrentState(RegistrationState.SENT_RESULT_PLAYER1_FACTION);
                 }
                 case SENT_RESULT_PLAYER1_FACTION -> {
-                    context.setPlayer1(messageText);
+                    if (context.getPlayerName() == null || !context.getPlayerName().equals("Назад"))
+                        context.setPlayer1(messageText);
                     message.setText("Выберите свою фракцию");
                     sendKeyboardMatchResult(message, context);
                 }
@@ -171,7 +177,8 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
                     context.setCurrentState(RegistrationState.SENT_RESULT_PLAYER2);
                 }
                 case SENT_RESULT_PLAYER2 -> {
-                    context.setPlayer2(messageText);
+                    if (context.getPlayerName() == null || !context.getPlayerName().equals("Назад"))
+                        context.setPlayer2(messageText);
                     context.setCurrentState(RegistrationState.SENT_RESULT_PLAYER2_FACTION);
                     message.setText("Выберите фракцию оппонента");
                     sendKeyboardMatchResult(message, context);
@@ -477,7 +484,8 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return System.getenv("BOT_TOKEN");
+//        return "6964845032:AAE4dvPlxcQgLdMXzRfzEe8fbfdy5e18N2I";//prod
+        return "6661764590:AAHMa_M_c0uGX7UxmyMil54jOWBXxiDLCC0";//test
     }
 
     private enum RegistrationState {
