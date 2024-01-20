@@ -14,7 +14,6 @@ import java.util.Map;
 
 public class IcehammerLadderBot extends TelegramLongPollingBot {
 
-//    Баг на создание игрока при смене страниц
 //Баг на внесение результатов с несуществующим именем оппа
 //Фича на форматирования вывода ладдера 
 
@@ -131,7 +130,7 @@ public class IcehammerLadderBot extends TelegramLongPollingBot {
                     context.setCurrentState(RegistrationState.ENTER_FACTION);
                 }
                 case ENTER_FACTION -> {
-                    if (context.getPlayerName() == null || !context.getPlayerName().equals("Назад"))
+                    if (context.getPlayerName() == null)
                         context.setPlayerName(messageText);
                     message.setText("Выберите фракцию:");
                     sendKeyboardFaction(message, context);
