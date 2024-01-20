@@ -1,2 +1,78 @@
-[
-]
+[ {
+  "player1Name" : "qwe",
+  "faction1" : "DEATHWATCH",
+  "rating1Before" : 1550,
+  "rating1After" : 1558,
+  "result" : 1.0,
+  "player2Name" : "qwe",
+  "faction2" : "ASTRA MILITARUM",
+  "rating2Before" : 1550,
+  "rating2After" : 1543,
+  "matchResultInvert" : 0.0
+}, {
+  "player1Name" : "qwe",
+  "faction1" : "DEATHWATCH",
+  "rating1Before" : 1558,
+  "rating1After" : 1550,
+  "result" : 0.0,
+  "player2Name" : "qwe",
+  "faction2" : "ASTRA MILITARUM",
+  "rating2Before" : 1543,
+  "rating2After" : 1551,
+  "matchResultInvert" : 1.0
+}, {
+  "player1Name" : "qwe",
+  "faction1" : "DEATHWATCH",
+  "rating1Before" : 1550,
+  "rating1After" : 1550,
+  "result" : 0.5,
+  "player2Name" : "qwe",
+  "faction2" : "ASTRA MILITARUM",
+  "rating2Before" : 1551,
+  "rating2After" : 1551,
+  "matchResultInvert" : 0.5
+}, {
+  "player1Name" : "qwe",
+  "faction1" : "DEATHWATCH",
+  "rating1Before" : 1550,
+  "rating1After" : 1550,
+  "result" : 0.5,
+  "player2Name" : "qwe",
+  "faction2" : "ASTRA MILITARUM",
+  "rating2Before" : 1551,
+  "rating2After" : 1551,
+  "matchResultInvert" : 0.5
+}, {
+  "player1Name" : "qwe",
+  "faction1" : "DEATHWATCH",
+  "rating1Before" : 1550,
+  "rating1After" : 1558,
+  "result" : 1.0,
+  "player2Name" : "qwe",
+  "faction2" : "ASTRA MILITARUM",
+  "rating2Before" : 1551,
+  "rating2After" : 1543,
+  "matchResultInvert" : 0.0
+}, {
+  "player1Name" : "qwe",
+  "faction1" : "DEATHWATCH",
+  "rating1Before" : 1558,
+  "rating1After" : 1550,
+  "result" : 0.0,
+  "player2Name" : "qwe",
+  "faction2" : "ASTRA MILITARUM",
+  "rating2Before" : 1543,
+  "rating2After" : 1551,
+  "matchResultInvert" : 1.0
+}, {
+  "player1Name" : "qwe",
+  "faction1" : "DEATHWATCH",
+  "rating1Before" : 1550,
+  "rating1After" : 1543,
+  "result" : 0.0,
+  "player2Name" : "qwe",
+  "faction2" : "ASTRA MILITARUM",
+  "rating2Before" : 1551,
+  "rating2After" : 1558,
+  "matchResultInvert" : 1.0
+} ]

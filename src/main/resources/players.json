@@ -1,1 +1,12 @@
-{ }
+{
+  "qwe:DEATHWATCH" : {
+    "playerName" : "qwe",
+    "faction" : "DEATHWATCH",
+    "rating" : 1543
+  },
+  "qwe:ASTRA MILITARUM" : {
+    "playerName" : "qwe",
+    "faction" : "ASTRA MILITARUM",
+    "rating" : 1558
+  }
+}

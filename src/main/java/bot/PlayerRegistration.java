@@ -107,7 +107,7 @@ public class PlayerRegistration {
                 .map(player -> "Игрок: " + player.getPlayerName() +
                         ", Фракция: " + player.getFaction() +
                         ", Рейтинг: " + player.getRating())
-                .collect(Collectors.joining("\n"));
+                .collect(Collectors.joining("\n\n"));
     }
 
     private static Map<String, PlayerData> loadPlayerData() {
